@@ -60,7 +60,15 @@ type PaneState struct {
 	// ChangedAt is when a poll last saw this pane's revision advance.
 	// Snapshots carry no timestamp, so it is the only ordering available.
 	ChangedAt time.Time
+
+	// Badge is a mark another plugin asked to show in front of the tab's
+	// title, through the pane's BadgeToken. Empty when none did.
+	Badge string
 }
+
+// BadgeToken is the pane metadata token a plugin reports to put a mark in
+// front of its tab's title, such as a check on a tab that is finished.
+const BadgeToken = "title_badge"
 
 // Process is one command running in a pane. Args is the whole argument vector,
 // program name included, and may be empty.
@@ -119,6 +127,7 @@ func PaneFrom(info herdr.PaneInfo, changedAt time.Time) *PaneState {
 		AgentSession:     info.AgentSession,
 		Focused:          info.Focused,
 		ChangedAt:        changedAt,
+		Badge:            strings.TrimSpace(info.Tokens[BadgeToken]),
 	}
 }
 

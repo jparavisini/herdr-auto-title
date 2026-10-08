@@ -57,6 +57,10 @@ type PaneInfo struct {
 	// AgentSession identifies the conversation the pane's agent is holding.
 	// It is null until the agent's Herdr integration reports one.
 	AgentSession *AgentSessionInfo `json:"agent_session"`
+
+	// Tokens are the display values plugins reported for this pane through
+	// pane.report_metadata, merged across reporters.
+	Tokens map[string]string `json:"tokens"`
 }
 
 // SessionRefID is the only reference kind Herdr has been seen to answer with.

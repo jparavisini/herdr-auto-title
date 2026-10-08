@@ -673,3 +673,24 @@ leads, it is counted against `MaxLength`, and where nothing would be left of the
 name the ID goes and the name stays. The brackets rather than `·` keep it from
 reading as a tab position when the goto panel lists both. It is off by default:
 the ID is noise to anyone not addressing panes by hand.
+
+## A badge another plugin asks for
+
+A plugin can put a mark in front of a tab's title by reporting a `title_badge`
+token on any of the tab's panes through `pane.report_metadata`. A sweep plugin
+that knows a tab's PR is merged reports `✓`, and the tab reads
+`✓ 4 · dashboard › claude`.
+
+Herdr has no tab metadata, so the only way to mark a tab bar entry is its
+label, and the label is Auto Title's. A plugin renaming the tab itself would be
+read as the user and lock the tab for good. A third decorator, `Badged`
+(`internal/resolver/badge.go`), keeps the label in one owner's hands: the badge
+is part of the name Auto Title resolves and sets, so the manual-rename
+bookkeeping sees its own work, and the badge goes on the first poll after the
+token does. Reports carry a TTL, so a plugin that dies takes its badge with it.
+
+It wraps the position rather than the other way round, so the badge leads and
+every position stays in one column behind it. It is counted against `MaxLength`
+like the position. Panes are ordered by ID, so when two panes carry different
+badges the same one wins every poll. It needs no setting: a session where no
+plugin reports the token resolves exactly as before.

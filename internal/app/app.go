@@ -109,6 +109,8 @@ func Resolvers(
 		titles = resolver.NewNumbered(chain, cfg.MaxLength)
 	}
 
+	titles = resolver.NewBadged(titles, cfg.MaxLength)
+
 	topics := topicsFor(cfg)
 
 	if !cfg.RenamePanes {
