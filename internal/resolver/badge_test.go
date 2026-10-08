@@ -65,3 +65,25 @@ func TestBadgeCountsAgainstTheBound(t *testing.T) {
 		t.Errorf("name = %q, want the badge and position within %d columns", got.Name, maxLength)
 	}
 }
+
+func TestPaneBadgeMarksOnlyItsPane(t *testing.T) {
+	t.Parallel()
+
+	tab := badgedTab("", "✓")
+	got := NewBadgedPanes(
+		New(Options{MaxLength: DefaultMaxLength}, NewCWD("")),
+		DefaultMaxLength,
+	).ResolvePanes(tab)
+
+	if len(got) != 2 {
+		t.Fatalf("got %d decisions, want 2", len(got))
+	}
+
+	if strings.HasPrefix(got[0].Name, "✓") {
+		t.Errorf("first pane = %q, want no badge", got[0].Name)
+	}
+
+	if !strings.HasPrefix(got[1].Name, "✓ ") {
+		t.Errorf("second pane = %q, want the badge in front", got[1].Name)
+	}
+}

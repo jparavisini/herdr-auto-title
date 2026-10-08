@@ -694,3 +694,7 @@ every position stays in one column behind it. It is counted against `MaxLength`
 like the position. Panes are ordered by ID, so when two panes carry different
 badges the same one wins every poll. It needs no setting: a session where no
 plugin reports the token resolves exactly as before.
+
+The same badge goes in front of the label of the pane that carries it, through
+`BadgedPanes`, when pane naming is on. In a tab with several panes the tab says
+something in it is marked and the pane label says which.

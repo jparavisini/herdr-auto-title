@@ -43,3 +43,37 @@ func (b *Badged) Resolve(tab state.TabState) Decision {
 
 	return decision
 }
+
+// BadgedPanes puts the badge a pane carries in front of that pane's own label,
+// so in a tab with several panes the one the badge is about is the one marked.
+type BadgedPanes struct {
+	inner PaneResolver
+	// maxLength is the bound inner was built with; the badge is counted
+	// against it, as PaneIDs counts the ID.
+	maxLength int
+}
+
+var _ PaneResolver = (*BadgedPanes)(nil)
+
+// NewBadgedPanes wraps inner, which must have been given the same maxLength.
+// Zero or less takes the default, as New does.
+func NewBadgedPanes(inner PaneResolver, maxLength int) *BadgedPanes {
+	if maxLength <= 0 {
+		maxLength = DefaultMaxLength
+	}
+
+	return &BadgedPanes{inner: inner, maxLength: maxLength}
+}
+
+// ResolvePanes names each pane and puts its own badge, if any, in front.
+func (b *BadgedPanes) ResolvePanes(tab state.TabState) []Decision {
+	decisions := b.inner.ResolvePanes(tab)
+
+	for i := range decisions {
+		if badge := tab.Panes[i].Badge; badge != "" {
+			decisions[i].Name = withPrefix(badge+" ", decisions[i].Name, b.maxLength)
+		}
+	}
+
+	return decisions
+}

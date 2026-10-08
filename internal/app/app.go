@@ -122,6 +122,8 @@ func Resolvers(
 		panes = resolver.NewPaneIDs(chain, cfg.MaxLength)
 	}
 
+	panes = resolver.NewBadgedPanes(panes, cfg.MaxLength)
+
 	return titles, panes, topics
 }
 
